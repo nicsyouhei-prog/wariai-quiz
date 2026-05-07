@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>割合の大小比較 練習問題</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+      background: #f5f4f0;
+      color: #1a1a18;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    #app { width: 100%; max-width: 640px; }
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ── Start screen ── */
+    .title-area { text-align: center; margin-bottom: 2rem; }
+    .title-area h1 { font-size: 24px; font-weight: 600; margin-bottom: 0.5rem; }
+    .title-area p { font-size: 14px; color: #5f5e5a; }
+
+    .info-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+    .info-card { background: #fff; border-radius: 10px; padding: 1rem; text-align: center; border: 1px solid #e0dfd8; }
+    .info-card .num { font-size: 26px; font-weight: 600; }
+    .info-card .lbl { font-size: 12px; color: #5f5e5a; margin-top: 4px; }
+
+    .timer-setting { background: #fff; border: 1px solid #e0dfd8; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+    .timer-setting-label { font-size: 13px; color: #5f5e5a; margin-bottom: 1rem; }
+    .timer-presets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1rem; }
+    .preset-btn {
+      padding: 10px 6px; border: 1px solid #ccc; border-radius: 8px;
+      background: #fff; font-size: 14px; font-weight: 500; cursor: pointer;
+      color: #1a1a18; transition: background 0.15s; text-align: center;
+      font-family: inherit;
+    }
+    .preset-btn:hover { background: #f5f4f0; }
+    .preset-btn.selected { background: #1a1a18; color: #fff; border-color: #1a1a18; }
+    .preset-btn .sub { font-size: 11px; font-weight: 400; opacity: 0.7; display: block; margin-top: 2px; }
+    .custom-row { display: flex; align-items: center; gap: 10px; }
+    .custom-row label { font-size: 13px; color: #5f5e5a; white-space: nowrap; }
+    .custom-row input[type=range] { flex: 1; accent-color: #1a1a18; }
+    .custom-val { font-size: 15px; font-weight: 500; min-width: 48px; text-align: right; }
+
+    .start-btn {
+      width: 100%; padding: 14px; background: #1a1a18; color: #fff;
+      border: none; border-radius: 10px; font-size: 16px; font-weight: 600;
+      cursor: pointer; font-family: inherit; transition: opacity 0.2s;
+    }
+    .start-btn:hover { opacity: 0.85; }
+    .start-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── Quiz screen ── */
+    .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .q-counter { font-size: 13px; color: #5f5e5a; }
+    .timer-wrap { display: flex; align-items: center; gap: 8px; }
+    .timer-bar-bg { width: 130px; height: 6px; background: #e0dfd8; border-radius: 999px; overflow: hidden; }
+    .timer-bar { height: 100%; background: #1a1a18; border-radius: 999px; transition: width 1s linear, background 0.3s; }
+    .timer-bar.warn { background: #e24b4a; }
+    .timer-num { font-size: 14px; font-weight: 600; min-width: 30px; }
+
+    .progress-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 1.5rem; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: #e0dfd8; border: 1px solid #ccc; }
+    .dot.done-correct { background: #639922; border-color: #639922; }
+    .dot.done-wrong { background: #e24b4a; border-color: #e24b4a; }
+    .dot.done-skip { background: #888780; border-color: #888780; }
+    .dot.active { background: #1a1a18; border-color: #1a1a18; }
+
+    .q-card {
+      background: #fff; border: 1px solid #e0dfd8; border-radius: 12px;
+      padding: 1.5rem; margin-bottom: 1.5rem; min-height: 160px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .q-text { font-size: 15px; line-height: 1.85; width: 100%; }
+    .q-theme { font-size: 13px; color: #5f5e5a; margin-bottom: 10px; }
+    .q-question { font-weight: 600; margin-bottom: 14px; font-size: 15px; }
+    .data-row {
+      display: flex; align-items: baseline; gap: 10px;
+      padding: 9px 13px; border-radius: 8px; margin-bottom: 7px;
+    }
+    .data-row.a-row { background: #e6f1fb; }
+    .data-row.b-row { background: #eaf3de; }
+    .data-row .entity { font-size: 13px; font-weight: 600; min-width: 40px; }
+    .data-row.a-row .entity { color: #0c447c; }
+    .data-row.b-row .entity { color: #3b6d11; }
+    .data-row .desc { font-size: 14px; }
+
+    .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+    .choice-btn {
+      padding: 15px 8px; border: 1px solid #ccc; border-radius: 10px;
+      background: #fff; font-size: 15px; font-weight: 500; cursor: pointer;
+      color: #1a1a18; transition: background 0.15s, transform 0.1s;
+      font-family: inherit;
+    }
+    .choice-btn:hover:not(:disabled) { background: #f5f4f0; }
+    .choice-btn:active:not(:disabled) { transform: scale(0.97); }
+    .choice-btn.correct { background: #eaf3de; border-color: #639922; color: #3b6d11; font-weight: 600; }
+    .choice-btn.wrong { background: #fcebeb; border-color: #e24b4a; color: #a32d2d; }
+    .choice-btn:disabled { cursor: not-allowed; }
+
+    .feedback {
+      font-size: 13px; padding: 10px 14px; border-radius: 8px; margin-bottom: 1rem;
+    }
+    .feedback.correct { background: #eaf3de; color: #3b6d11; }
+    .feedback.wrong { background: #fcebeb; color: #a32d2d; }
+    .feedback.skip { background: #f5f4f0; color: #5f5e5a; }
+
+    .skip-btn {
+      width: 100%; padding: 10px; background: transparent;
+      border: 1px solid #d3d1c7; border-radius: 8px; font-size: 13px;
+      color: #5f5e5a; cursor: pointer; font-family: inherit;
+    }
+    .skip-btn:hover { background: #f5f4f0; }
+
+    .loading-state { text-align: center; padding: 2rem; }
+    .spinner {
+      width: 32px; height: 32px; border: 2px solid #e0dfd8;
+      border-top-color: #1a1a18; border-radius: 50%;
+      animation: spin 0.8s linear infinite; margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Result screen ── */
+    .result-card {
+      background: #fff; border: 1px solid #e0dfd8; border-radius: 12px;
+      padding: 2rem; text-align: center; margin-bottom: 1.5rem;
+    }
+    .score-big { font-size: 52px; font-weight: 700; }
+    .score-sub { font-size: 14px; color: #5f5e5a; margin-top: 8px; }
+    .result-meta { font-size: 13px; color: #888780; margin-top: 6px; }
+    .result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+    .r-card { background: #fff; border: 1px solid #e0dfd8; border-radius: 10px; padding: 1rem; text-align: center; }
+    .r-card .num { font-size: 24px; font-weight: 600; }
+    .r-card.c .num { color: #3b6d11; }
+    .r-card.w .num { color: #a32d2d; }
+    .r-card.s .num { color: #888780; }
+    .r-card .lbl { font-size: 12px; color: #5f5e5a; margin-top: 4px; }
+    .retry-btn {
+      width: 100%; padding: 14px; background: #1a1a18; color: #fff;
+      border: none; border-radius: 10px; font-size: 16px; font-weight: 600;
+      cursor: pointer; font-family: inherit; transition: opacity 0.2s;
+    }
+    .retry-btn:hover { opacity: 0.85; }
+
+    @media (max-width: 480px) {
+      .timer-presets { grid-template-columns: repeat(2, 1fr); }
+      .info-cards { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ===== スタート画面 ===== -->
+  <div id="screen-start" class="screen active">
+    <div class="title-area">
+      <h1>割合の大小比較</h1>
+      <p>2つの対象を比べて、割合が大きい方を選ぼう</p>
+    </div>
+    <div class="info-cards">
+      <div class="info-card"><div class="num">10</div><div class="lbl">問</div></div>
+      <div class="info-card"><div class="num" id="info-time">30</div><div class="lbl">秒 / 問</div></div>
+      <div class="info-card"><div class="num">毎回</div><div class="lbl">新しい問題</div></div>
+    </div>
+
+    <div class="timer-setting">
+      <div class="timer-setting-label">1問あたりの制限時間を選ぶ</div>
+      <div class="timer-presets">
+        <button class="preset-btn" onclick="selectPreset(15)">15秒<span class="sub">上級</span></button>
+        <button class="preset-btn selected" onclick="selectPreset(30)">30秒<span class="sub">標準</span></button>
+        <button class="preset-btn" onclick="selectPreset(60)">60秒<span class="sub">じっくり</span></button>
+        <button class="preset-btn" id="preset-custom" onclick="selectPreset('custom')">自由設定<span class="sub" id="custom-preview">—</span></button>
+      </div>
+      <div class="custom-row" id="custom-row" style="display:none;">
+        <label>秒数</label>
+        <input type="range" id="custom-slider" min="10" max="120" step="5" value="45" oninput="onSlider(this.value)">
+        <span class="custom-val" id="custom-val">45秒</span>
+      </div>
+    </div>
+
+    <div id="start-err"></div>
+    <button class="start-btn" id="start-btn" onclick="startQuiz()">スタート</button>
+  </div>
+
+  <!-- ===== クイズ画面 ===== -->
+  <div id="screen-quiz" class="screen">
+    <div class="quiz-header">
+      <span class="q-counter" id="q-counter">1 / 10</span>
+      <div class="timer-wrap">
+        <div class="timer-bar-bg"><div class="timer-bar" id="timer-bar"></div></div>
+        <span class="timer-num" id="timer-num">30</span>
+      </div>
+    </div>
+    <div class="progress-dots" id="dots"></div>
+    <div class="q-card" id="q-card">
+      <div class="loading-state"><div class="spinner"></div><p style="font-size:13px;color:#5f5e5a">問題を生成中…</p></div>
+    </div>
+    <div class="choices" id="choices"></div>
+    <div id="feedback-area"></div>
+    <button class="skip-btn" id="skip-btn" onclick="skipQuestion()">時間切れ・スキップ</button>
+  </div>
+
+  <!-- ===== 結果画面 ===== -->
+  <div id="screen-result" class="screen">
+    <div class="title-area"><h1>結果</h1></div>
+    <div class="result-card">
+      <div class="score-big" id="score-pct">—</div>
+      <div class="score-sub" id="score-sub">—</div>
+      <div class="result-meta" id="score-meta"></div>
+    </div>
+    <div class="result-grid">
+      <div class="r-card c"><div class="num" id="r-correct">0</div><div class="lbl">正解</div></div>
+      <div class="r-card w"><div class="num" id="r-wrong">0</div><div class="lbl">不正解</div></div>
+      <div class="r-card s"><div class="num" id="r-skip">0</div><div class="lbl">スキップ</div></div>
+    </div>
+    <button class="retry-btn" onclick="retryQuiz()">もう一度チャレンジ</button>
+  </div>
+
+</div>
+
+<script>
+const TOTAL = 10;
+let TIME = 30;
+let questions = [], current = 0, results = [];
+let timerInterval = null, timeLeft = 0, answered = false;
+
+const TEMPLATES = [
+  { theme: "データ通信量", contextA: "月間データ量", contextB: "使用量", unit: "GB", verb: "使用量の割合が大きい" },
+  { theme: "テスト成績", contextA: "問題数", contextB: "正解数", unit: "問", verb: "正答率が高い" },
+  { theme: "欠勤率", contextA: "従業員数", contextB: "欠勤者数", unit: "人", verb: "欠勤率が高い" },
+  { theme: "観光客の宿泊率", contextA: "観光客数", contextB: "宿泊者数", unit: "人", verb: "宿泊率が高い" },
+  { theme: "リサイクル率", contextA: "ゴミ総量", contextB: "再生量", unit: "トン", verb: "リサイクル率が高い" },
+  { theme: "商品の売上率", contextA: "仕入れ数", contextB: "販売数", unit: "個", verb: "売上率が高い" },
+  { theme: "合格率", contextA: "受験者数", contextB: "合格者数", unit: "人", verb: "合格率が高い" },
+  { theme: "出席率", contextA: "クラス人数", contextB: "出席者数", unit: "人", verb: "出席率が高い" },
+  { theme: "節水率", contextA: "使用目標量", contextB: "節水量", unit: "L", verb: "節水率が高い" },
+  { theme: "利用率", contextA: "収容人数", contextB: "利用者数", unit: "席", verb: "利用率が高い" },
+  { theme: "投票率", contextA: "有権者数", contextB: "投票者数", unit: "人", verb: "投票率が高い" },
+  { theme: "不良品率", contextA: "生産数", contextB: "不良品数", unit: "個", verb: "不良品率が高い" },
+  { theme: "返品率", contextA: "販売数", contextB: "返品数", unit: "個", verb: "返品率が高い" },
+  { theme: "収益率", contextA: "売上高", contextB: "利益額", unit: "万円", verb: "収益率が高い" },
+  { theme: "読書達成率", contextA: "目標冊数", contextB: "読了冊数", unit: "冊", verb: "達成率が高い" },
+];
+
+function selectPreset(val) {
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+  const customRow = document.getElementById('custom-row');
+  if (val === 'custom') {
+    document.getElementById('preset-custom').classList.add('selected');
+    customRow.style.display = 'flex';
+    const sv = parseInt(document.getElementById('custom-slider').value);
+    TIME = sv;
+    document.getElementById('custom-preview').textContent = sv + '秒';
+  } else {
+    customRow.style.display = 'none';
+    TIME = val;
+    document.getElementById('custom-preview').textContent = '—';
+    const map = {15: 0, 30: 1, 60: 2};
+    if (map[val] !== undefined) document.querySelectorAll('.preset-btn')[map[val]].classList.add('selected');
+  }
+  document.getElementById('info-time').textContent = TIME;
+}
+
+function onSlider(v) {
+  TIME = parseInt(v);
+  document.getElementById('custom-val').textContent = v + '秒';
+  document.getElementById('custom-preview').textContent = v + '秒';
+  document.getElementById('info-time').textContent = v;
+}
+
+function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function addComma(n) { return Number(n).toLocaleString('ja-JP'); }
+
+function generateLocalQuestions() {
+  const shuffled = [...TEMPLATES].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, TOTAL).map(t => {
+    const totalA = randInt(50, 800), totalB = randInt(60, 900);
+    const ratioA = Math.random() * 0.55 + 0.15;
+    const diff = (Math.random() < 0.5 ? 1 : -1) * (Math.random() * 0.12 + 0.05);
+    const ratioB = Math.max(0.1, Math.min(0.95, ratioA + diff));
+    const partA = Math.round(totalA * ratioA), partB = Math.round(totalB * ratioB);
+    return {
+      theme: t.theme, contextA: t.contextA, contextB: t.contextB, unit: t.unit, verb: t.verb,
+      totalA, totalB, partA, partB,
+      rateA: (partA / totalA * 100).toFixed(1),
+      rateB: (partB / totalB * 100).toFixed(1),
+      correct: ratioA >= ratioB ? 'A' : 'B'
+    };
+  });
+}
+
+async function startQuiz() {
+  const btn = document.getElementById('start-btn');
+  btn.disabled = true; btn.textContent = '問題を生成中…';
+  document.getElementById('start-err').innerHTML = '';
+  try { questions = await fetchQuestionsFromClaude(); }
+  catch(e) { questions = generateLocalQuestions(); }
+  current = 0; results = [];
+  showScreen('screen-quiz');
+  buildDots(); showQuestion();
+  btn.disabled = false; btn.textContent = 'スタート';
+}
+
+async function fetchQuestionsFromClaude() {
+  const prompt = `割合の大小比較の練習問題を${TOTAL}問、日本語でJSON形式で生成してください。各問題は異なるテーマを使うこと。正答は必ず"A"か"B"のどちらか（同じ割合にしない）。AとBが均等に分布するようにすること。数値は現実的かつ計算しやすい値にすること。
+以下のJSON配列のみを返してください（説明文やコードブロック記号は不要）：
+[{"theme":"テーマ名","question":"問題文（どちらの○○が高いか）","labelA":"A側の名称","descA":"Aの説明（例：月間30GBの契約で17GB使用）","labelB":"B側の名称","descB":"Bの説明","totalA":数値,"partA":数値,"totalB":数値,"partB":数値,"unit":"単位","correct":"AまたはB","rateA":"小数点1桁の数値","rateB":"小数点1桁の数値"}]`;
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: prompt }] })
+  });
+  if (!res.ok) throw new Error('API error: ' + res.status);
+  const data = await res.json();
+  const text = data.content.map(i => i.text || '').join('');
+  const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+  if (!Array.isArray(parsed) || parsed.length < TOTAL) throw new Error('invalid response');
+  return parsed.slice(0, TOTAL);
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function buildDots() {
+  const el = document.getElementById('dots'); el.innerHTML = '';
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : ''); d.id = 'dot-' + i; el.appendChild(d);
+  }
+}
+
+function updateDot(idx, state) {
+  const d = document.getElementById('dot-' + idx); if (d) d.className = 'dot done-' + state;
+  const n = document.getElementById('dot-' + (idx + 1)); if (n) n.className = 'dot active';
+}
+
+function showQuestion() {
+  if (current >= TOTAL) { showResult(); return; }
+  answered = false;
+  document.getElementById('q-counter').textContent = (current + 1) + ' / ' + TOTAL;
+  document.getElementById('feedback-area').innerHTML = '';
+  document.getElementById('skip-btn').style.display = '';
+  const q = questions[current];
+  const card = document.getElementById('q-card');
+  if (q.question) {
+    card.innerHTML = `<div class="q-text">
+      <div class="q-theme">${q.theme}</div>
+      <div class="q-question">${q.question}</div>
+      <div class="data-row a-row"><span class="entity">${q.labelA || 'A'}</span><span class="desc">${q.descA}</span></div>
+      <div class="data-row b-row"><span class="entity">${q.labelB || 'B'}</span><span class="desc">${q.descB}</span></div>
+    </div>`;
+  } else {
+    card.innerHTML = `<div class="q-text">
+      <div class="q-theme">${q.theme}</div>
+      <div class="q-question">どちらの${q.verb || '割合が大きい'}か？</div>
+      <div class="data-row a-row"><span class="entity">A</span><span class="desc">${q.contextA}：${addComma(q.totalA)}${q.unit}　${q.contextB}：${addComma(q.partA)}${q.unit}</span></div>
+      <div class="data-row b-row"><span class="entity">B</span><span class="desc">${q.contextA}：${addComma(q.totalB)}${q.unit}　${q.contextB}：${addComma(q.partB)}${q.unit}</span></div>
+    </div>`;
+  }
+  document.getElementById('choices').innerHTML = `
+    <button class="choice-btn" id="btn-A" onclick="answer('A')">Aの方が大きい</button>
+    <button class="choice-btn" id="btn-B" onclick="answer('B')">Bの方が大きい</button>`;
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(timerInterval); timeLeft = TIME; updateTimerUI();
+  timerInterval = setInterval(() => {
+    timeLeft--; updateTimerUI();
+    if (timeLeft <= 0) { clearInterval(timerInterval); if (!answered) skipQuestion(); }
+  }, 1000);
+}
+
+function updateTimerUI() {
+  const pct = (timeLeft / TIME * 100).toFixed(1);
+  const bar = document.getElementById('timer-bar');
+  bar.style.width = pct + '%';
+  bar.className = 'timer-bar' + (timeLeft <= Math.max(8, Math.round(TIME * 0.25)) ? ' warn' : '');
+  document.getElementById('timer-num').textContent = timeLeft;
+}
+
+function answer(choice) {
+  if (answered) return;
+  answered = true; clearInterval(timerInterval);
+  const q = questions[current], correct = q.correct, isCorrect = choice === correct;
+  results.push({ correct: isCorrect, skipped: false });
+  const btnA = document.getElementById('btn-A'), btnB = document.getElementById('btn-B');
+  [btnA, btnB].forEach(b => b.disabled = true);
+  if (correct === 'A') { btnA.classList.add('correct'); if (choice === 'B') btnB.classList.add('wrong'); }
+  else { btnB.classList.add('correct'); if (choice === 'A') btnA.classList.add('wrong'); }
+  const rA = parseFloat(q.rateA).toFixed(1), rB = parseFloat(q.rateB).toFixed(1);
+  const fb = document.getElementById('feedback-area');
+  if (isCorrect) {
+    fb.innerHTML = `<div class="feedback correct">✓ 正解！（A：${rA}%　B：${rB}%）</div>`;
+  } else {
+    const ans = correct === 'A' ? 'Aの方が大きい' : 'Bの方が大きい';
+    fb.innerHTML = `<div class="feedback wrong">✗ 不正解。正解は「${ans}」（A：${rA}%　B：${rB}%）</div>`;
+  }
+  updateDot(current, isCorrect ? 'correct' : 'wrong');
+  document.getElementById('skip-btn').style.display = 'none';
+  setTimeout(() => { current++; showQuestion(); }, 1800);
+}
+
+function skipQuestion() {
+  if (answered) return;
+  answered = true; clearInterval(timerInterval);
+  const q = questions[current];
+  results.push({ correct: false, skipped: true });
+  [document.getElementById('btn-A'), document.getElementById('btn-B')].forEach(b => { if (b) b.disabled = true; });
+  const ans = q.correct === 'A' ? 'Aの方が大きい' : 'Bの方が大きい';
+  const rA = parseFloat(q.rateA).toFixed(1), rB = parseFloat(q.rateB).toFixed(1);
+  document.getElementById('feedback-area').innerHTML = `<div class="feedback skip">時間切れ。正解は「${ans}」（A：${rA}%　B：${rB}%）</div>`;
+  updateDot(current, 'skip');
+  document.getElementById('skip-btn').style.display = 'none';
+  setTimeout(() => { current++; showQuestion(); }, 1800);
+}
+
+function showResult() {
+  showScreen('screen-result');
+  const correct = results.filter(r => r.correct).length;
+  const skipped = results.filter(r => r.skipped).length;
+  const wrong = results.filter(r => !r.correct && !r.skipped).length;
+  const pct = Math.round(correct / TOTAL * 100);
+  document.getElementById('score-pct').textContent = pct + '%';
+  document.getElementById('score-sub').textContent =
+    pct === 100 ? '全問正解！素晴らしい！' :
+    pct >= 80 ? 'よくできました！' :
+    pct >= 60 ? 'もう少し練習しよう！' : '基礎から復習しよう！';
+  document.getElementById('score-meta').textContent = `制限時間：${TIME}秒 / 問`;
+  document.getElementById('r-correct').textContent = correct;
+  document.getElementById('r-wrong').textContent = wrong;
+  document.getElementById('r-skip').textContent = skipped;
+}
+
+function retryQuiz() {
+  current = 0; results = []; questions = [];
+  showScreen('screen-start');
+}
+</script>
+</body>
+</html>
