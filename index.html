@@ -20,29 +20,34 @@
     .screen { display: none; }
     .screen.active { display: block; }
 
-    /* ── Start screen ── */
     .title-area { text-align: center; margin-bottom: 2rem; }
     .title-area h1 { font-size: 24px; font-weight: 600; margin-bottom: 0.5rem; }
     .title-area p { font-size: 14px; color: #5f5e5a; }
 
-    .info-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }
-    .info-card { background: #fff; border-radius: 10px; padding: 1rem; text-align: center; border: 1px solid #e0dfd8; }
-    .info-card .num { font-size: 26px; font-weight: 600; }
-    .info-card .lbl { font-size: 12px; color: #5f5e5a; margin-top: 4px; }
+    .info-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+    .info-card { background: #fff; border-radius: 10px; padding: 0.9rem; text-align: center; border: 1px solid #e0dfd8; }
+    .info-card .num { font-size: 20px; font-weight: 600; }
+    .info-card .lbl { font-size: 11px; color: #5f5e5a; margin-top: 4px; }
 
-    .timer-setting { background: #fff; border: 1px solid #e0dfd8; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
-    .timer-setting-label { font-size: 13px; color: #5f5e5a; margin-bottom: 1rem; }
-    .timer-presets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1rem; }
-    .preset-btn {
+    .setting-box { background: #fff; border: 1px solid #e0dfd8; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+    .setting-label { font-size: 13px; color: #5f5e5a; margin-bottom: 0.75rem; }
+
+    .btn-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .btn-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .btn-grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+
+    .sel-btn {
       padding: 10px 6px; border: 1px solid #ccc; border-radius: 8px;
       background: #fff; font-size: 14px; font-weight: 500; cursor: pointer;
-      color: #1a1a18; transition: background 0.15s; text-align: center;
-      font-family: inherit;
+      color: #1a1a18; text-align: center; font-family: inherit; transition: background 0.15s;
     }
-    .preset-btn:hover { background: #f5f4f0; }
-    .preset-btn.selected { background: #1a1a18; color: #fff; border-color: #1a1a18; }
-    .preset-btn .sub { font-size: 11px; font-weight: 400; opacity: 0.7; display: block; margin-top: 2px; }
-    .custom-row { display: flex; align-items: center; gap: 10px; }
+    .sel-btn:hover { background: #f5f4f0; }
+    .sel-btn.selected { background: #1a1a18; color: #fff; border-color: #1a1a18; }
+    .sel-btn .sub { font-size: 11px; font-weight: 400; opacity: 0.7; display: block; margin-top: 2px; }
+    .sel-btn.lg { padding: 14px 8px; font-size: 15px; }
+    .sel-btn.lg .sub { font-size: 12px; }
+
+    .custom-row { display: flex; align-items: center; gap: 10px; margin-top: 0.75rem; }
     .custom-row label { font-size: 13px; color: #5f5e5a; white-space: nowrap; }
     .custom-row input[type=range] { flex: 1; accent-color: #1a1a18; }
     .custom-val { font-size: 15px; font-weight: 500; min-width: 48px; text-align: right; }
@@ -50,12 +55,11 @@
     .start-btn {
       width: 100%; padding: 14px; background: #1a1a18; color: #fff;
       border: none; border-radius: 10px; font-size: 16px; font-weight: 600;
-      cursor: pointer; font-family: inherit; transition: opacity 0.2s;
+      cursor: pointer; font-family: inherit; transition: opacity 0.2s; margin-top: 0.5rem;
     }
     .start-btn:hover { opacity: 0.85; }
     .start-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* ── Quiz screen ── */
     .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
     .q-counter { font-size: 13px; color: #5f5e5a; }
     .timer-wrap { display: flex; align-items: center; gap: 8px; }
@@ -64,7 +68,7 @@
     .timer-bar.warn { background: #e24b4a; }
     .timer-num { font-size: 14px; font-weight: 600; min-width: 30px; }
 
-    .progress-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 1.5rem; }
+    .progress-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
     .dot { width: 10px; height: 10px; border-radius: 50%; background: #e0dfd8; border: 1px solid #ccc; }
     .dot.done-correct { background: #639922; border-color: #639922; }
     .dot.done-wrong { background: #e24b4a; border-color: #e24b4a; }
@@ -79,23 +83,23 @@
     .q-text { font-size: 15px; line-height: 1.85; width: 100%; }
     .q-theme { font-size: 13px; color: #5f5e5a; margin-bottom: 10px; }
     .q-question { font-weight: 600; margin-bottom: 14px; font-size: 15px; }
-    .data-row {
-      display: flex; align-items: baseline; gap: 10px;
-      padding: 9px 13px; border-radius: 8px; margin-bottom: 7px;
-    }
+    .data-row { display: flex; align-items: baseline; gap: 10px; padding: 9px 13px; border-radius: 8px; margin-bottom: 7px; }
     .data-row.a-row { background: #e6f1fb; }
     .data-row.b-row { background: #eaf3de; }
+    .data-row.c-row { background: #fdf3e3; }
     .data-row .entity { font-size: 13px; font-weight: 600; min-width: 40px; }
     .data-row.a-row .entity { color: #0c447c; }
     .data-row.b-row .entity { color: #3b6d11; }
+    .data-row.c-row .entity { color: #8b5000; }
     .data-row .desc { font-size: 14px; }
 
-    .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+    .choices { display: grid; gap: 10px; margin-bottom: 1.5rem; }
+    .choices.two { grid-template-columns: 1fr 1fr; }
+    .choices.three { grid-template-columns: 1fr 1fr 1fr; }
     .choice-btn {
       padding: 15px 8px; border: 1px solid #ccc; border-radius: 10px;
-      background: #fff; font-size: 15px; font-weight: 500; cursor: pointer;
-      color: #1a1a18; transition: background 0.15s, transform 0.1s;
-      font-family: inherit;
+      background: #fff; font-size: 14px; font-weight: 500; cursor: pointer;
+      color: #1a1a18; transition: background 0.15s, transform 0.1s; font-family: inherit;
     }
     .choice-btn:hover:not(:disabled) { background: #f5f4f0; }
     .choice-btn:active:not(:disabled) { transform: scale(0.97); }
@@ -103,9 +107,7 @@
     .choice-btn.wrong { background: #fcebeb; border-color: #e24b4a; color: #a32d2d; }
     .choice-btn:disabled { cursor: not-allowed; }
 
-    .feedback {
-      font-size: 13px; padding: 10px 14px; border-radius: 8px; margin-bottom: 1rem;
-    }
+    .feedback { font-size: 13px; padding: 10px 14px; border-radius: 8px; margin-bottom: 1rem; }
     .feedback.correct { background: #eaf3de; color: #3b6d11; }
     .feedback.wrong { background: #fcebeb; color: #a32d2d; }
     .feedback.skip { background: #f5f4f0; color: #5f5e5a; }
@@ -117,7 +119,6 @@
     }
     .skip-btn:hover { background: #f5f4f0; }
 
-    .loading-state { text-align: center; padding: 2rem; }
     .spinner {
       width: 32px; height: 32px; border: 2px solid #e0dfd8;
       border-top-color: #1a1a18; border-radius: 50%;
@@ -125,14 +126,14 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── Result screen ── */
     .result-card {
       background: #fff; border: 1px solid #e0dfd8; border-radius: 12px;
       padding: 2rem; text-align: center; margin-bottom: 1.5rem;
     }
     .score-big { font-size: 52px; font-weight: 700; }
     .score-sub { font-size: 14px; color: #5f5e5a; margin-top: 8px; }
-    .result-meta { font-size: 13px; color: #888780; margin-top: 6px; }
+    .score-meta { font-size: 13px; color: #888780; margin-top: 6px; }
+
     .result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }
     .r-card { background: #fff; border: 1px solid #e0dfd8; border-radius: 10px; padding: 1rem; text-align: center; }
     .r-card .num { font-size: 24px; font-weight: 600; }
@@ -140,41 +141,87 @@
     .r-card.w .num { color: #a32d2d; }
     .r-card.s .num { color: #888780; }
     .r-card .lbl { font-size: 12px; color: #5f5e5a; margin-top: 4px; }
-    .retry-btn {
-      width: 100%; padding: 14px; background: #1a1a18; color: #fff;
-      border: none; border-radius: 10px; font-size: 16px; font-weight: 600;
+
+    .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+    .primary-btn {
+      padding: 14px; background: #1a1a18; color: #fff;
+      border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
       cursor: pointer; font-family: inherit; transition: opacity 0.2s;
     }
-    .retry-btn:hover { opacity: 0.85; }
+    .primary-btn:hover { opacity: 0.85; }
+    .secondary-btn {
+      padding: 14px; background: #fff; color: #1a1a18;
+      border: 1px solid #ccc; border-radius: 10px; font-size: 15px; font-weight: 500;
+      cursor: pointer; font-family: inherit; transition: background 0.15s;
+    }
+    .secondary-btn:hover { background: #f5f4f0; }
+
+    .review-item { background: #fff; border: 1px solid #e0dfd8; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+    .review-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.75rem; flex-wrap: wrap; }
+    .review-num { font-size: 12px; color: #5f5e5a; }
+    .review-badge { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; }
+    .badge-correct { background: #eaf3de; color: #3b6d11; }
+    .badge-wrong { background: #fcebeb; color: #a32d2d; }
+    .badge-skip { background: #f5f4f0; color: #888780; }
+    .review-mychoice { font-size: 12px; color: #888780; }
+    .review-question { font-size: 14px; font-weight: 600; color: #1a1a18; margin-bottom: 10px; }
+    .review-data { margin-bottom: 10px; }
+    .review-answer { font-size: 13px; padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; }
+    .review-answer.correct { background: #eaf3de; color: #3b6d11; font-weight: 600; }
+    .review-answer.neutral { background: #f5f4f0; color: #5f5e5a; }
+    .review-explanation { font-size: 13px; color: #5f5e5a; padding: 10px 12px; background: #f5f4f0; border-radius: 8px; border-left: 3px solid #d3d1c7; line-height: 1.7; }
 
     @media (max-width: 480px) {
-      .timer-presets { grid-template-columns: repeat(2, 1fr); }
-      .info-cards { grid-template-columns: repeat(3, 1fr); }
+      .btn-grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .btn-grid-6 { grid-template-columns: repeat(3, 1fr); }
+      .choices.three { grid-template-columns: 1fr; }
+      .action-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- ===== スタート画面 ===== -->
+  <!-- スタート画面 -->
   <div id="screen-start" class="screen active">
     <div class="title-area">
       <h1>割合の大小比較</h1>
-      <p>2つの対象を比べて、割合が大きい方を選ぼう</p>
+      <p>割合が最も大きいものを選ぼう</p>
     </div>
     <div class="info-cards">
-      <div class="info-card"><div class="num">10</div><div class="lbl">問</div></div>
+      <div class="info-card"><div class="num" id="info-q">10</div><div class="lbl">問</div></div>
+      <div class="info-card"><div class="num" id="info-cmp">2</div><div class="lbl">比較する数</div></div>
       <div class="info-card"><div class="num" id="info-time">30</div><div class="lbl">秒 / 問</div></div>
       <div class="info-card"><div class="num">毎回</div><div class="lbl">新しい問題</div></div>
     </div>
 
-    <div class="timer-setting">
-      <div class="timer-setting-label">1問あたりの制限時間を選ぶ</div>
-      <div class="timer-presets">
-        <button class="preset-btn" onclick="selectPreset(15)">15秒<span class="sub">上級</span></button>
-        <button class="preset-btn selected" onclick="selectPreset(30)">30秒<span class="sub">標準</span></button>
-        <button class="preset-btn" onclick="selectPreset(60)">60秒<span class="sub">じっくり</span></button>
-        <button class="preset-btn" id="preset-custom" onclick="selectPreset('custom')">自由設定<span class="sub" id="custom-preview">—</span></button>
+    <div class="setting-box">
+      <div class="setting-label">問題数</div>
+      <div class="btn-grid-6">
+        <button class="sel-btn" onclick="selectQ(5)">5問</button>
+        <button class="sel-btn" onclick="selectQ(6)">6問</button>
+        <button class="sel-btn" onclick="selectQ(7)">7問</button>
+        <button class="sel-btn" onclick="selectQ(8)">8問</button>
+        <button class="sel-btn" onclick="selectQ(9)">9問</button>
+        <button class="sel-btn selected" onclick="selectQ(10)">10問</button>
+      </div>
+    </div>
+
+    <div class="setting-box">
+      <div class="setting-label">比較する割合の数</div>
+      <div class="btn-grid-2">
+        <button class="sel-btn lg selected" id="cmp-2" onclick="selectCompare(2)">2つ比較<span class="sub">AとB</span></button>
+        <button class="sel-btn lg" id="cmp-3" onclick="selectCompare(3)">3つ比較<span class="sub">AとBとC</span></button>
+      </div>
+    </div>
+
+    <div class="setting-box">
+      <div class="setting-label">1問あたりの制限時間</div>
+      <div class="btn-grid-4">
+        <button class="sel-btn" onclick="selectPreset(15)">15秒<span class="sub">上級</span></button>
+        <button class="sel-btn selected" onclick="selectPreset(30)">30秒<span class="sub">標準</span></button>
+        <button class="sel-btn" onclick="selectPreset(60)">60秒<span class="sub">じっくり</span></button>
+        <button class="sel-btn" id="preset-custom" onclick="selectPreset('custom')">自由設定<span class="sub" id="custom-preview">—</span></button>
       </div>
       <div class="custom-row" id="custom-row" style="display:none;">
         <label>秒数</label>
@@ -183,11 +230,10 @@
       </div>
     </div>
 
-    <div id="start-err"></div>
     <button class="start-btn" id="start-btn" onclick="startQuiz()">スタート</button>
   </div>
 
-  <!-- ===== クイズ画面 ===== -->
+  <!-- クイズ画面 -->
   <div id="screen-quiz" class="screen">
     <div class="quiz-header">
       <span class="q-counter" id="q-counter">1 / 10</span>
@@ -198,74 +244,94 @@
     </div>
     <div class="progress-dots" id="dots"></div>
     <div class="q-card" id="q-card">
-      <div class="loading-state"><div class="spinner"></div><p style="font-size:13px;color:#5f5e5a">問題を生成中…</p></div>
+      <div style="text-align:center;padding:2rem"><div class="spinner"></div><p style="font-size:13px;color:#5f5e5a">問題を生成中…</p></div>
     </div>
     <div class="choices" id="choices"></div>
     <div id="feedback-area"></div>
     <button class="skip-btn" id="skip-btn" onclick="skipQuestion()">時間切れ・スキップ</button>
   </div>
 
-  <!-- ===== 結果画面 ===== -->
+  <!-- 結果画面 -->
   <div id="screen-result" class="screen">
     <div class="title-area"><h1>結果</h1></div>
     <div class="result-card">
       <div class="score-big" id="score-pct">—</div>
       <div class="score-sub" id="score-sub">—</div>
-      <div class="result-meta" id="score-meta"></div>
+      <div class="score-meta" id="score-meta"></div>
     </div>
     <div class="result-grid">
       <div class="r-card c"><div class="num" id="r-correct">0</div><div class="lbl">正解</div></div>
       <div class="r-card w"><div class="num" id="r-wrong">0</div><div class="lbl">不正解</div></div>
       <div class="r-card s"><div class="num" id="r-skip">0</div><div class="lbl">スキップ</div></div>
     </div>
-    <button class="retry-btn" onclick="retryQuiz()">もう一度チャレンジ</button>
+    <div class="action-row">
+      <button class="secondary-btn" onclick="showReview()">&#128203; 問題を振り返る</button>
+      <button class="primary-btn" onclick="retryQuiz()">&#8635; もう一度</button>
+    </div>
+  </div>
+
+  <!-- 振り返り画面 -->
+  <div id="screen-review" class="screen">
+    <div class="title-area"><h1>振り返り</h1></div>
+    <div id="review-list"></div>
+    <div class="action-row">
+      <button class="secondary-btn" onclick="showScreen('screen-result')">&#8592; 結果に戻る</button>
+      <button class="primary-btn" onclick="retryQuiz()">&#8635; もう一度</button>
+    </div>
   </div>
 
 </div>
-
 <script>
-const TOTAL = 10;
-let TIME = 30;
+let TOTAL = 10, TIME = 30, COMPARE = 2;
 let questions = [], current = 0, results = [];
 let timerInterval = null, timeLeft = 0, answered = false;
 
 const TEMPLATES = [
-  { theme: "データ通信量", contextA: "月間データ量", contextB: "使用量", unit: "GB", verb: "使用量の割合が大きい" },
-  { theme: "テスト成績", contextA: "問題数", contextB: "正解数", unit: "問", verb: "正答率が高い" },
-  { theme: "欠勤率", contextA: "従業員数", contextB: "欠勤者数", unit: "人", verb: "欠勤率が高い" },
-  { theme: "観光客の宿泊率", contextA: "観光客数", contextB: "宿泊者数", unit: "人", verb: "宿泊率が高い" },
-  { theme: "リサイクル率", contextA: "ゴミ総量", contextB: "再生量", unit: "トン", verb: "リサイクル率が高い" },
-  { theme: "商品の売上率", contextA: "仕入れ数", contextB: "販売数", unit: "個", verb: "売上率が高い" },
-  { theme: "合格率", contextA: "受験者数", contextB: "合格者数", unit: "人", verb: "合格率が高い" },
-  { theme: "出席率", contextA: "クラス人数", contextB: "出席者数", unit: "人", verb: "出席率が高い" },
-  { theme: "節水率", contextA: "使用目標量", contextB: "節水量", unit: "L", verb: "節水率が高い" },
-  { theme: "利用率", contextA: "収容人数", contextB: "利用者数", unit: "席", verb: "利用率が高い" },
-  { theme: "投票率", contextA: "有権者数", contextB: "投票者数", unit: "人", verb: "投票率が高い" },
-  { theme: "不良品率", contextA: "生産数", contextB: "不良品数", unit: "個", verb: "不良品率が高い" },
-  { theme: "返品率", contextA: "販売数", contextB: "返品数", unit: "個", verb: "返品率が高い" },
-  { theme: "収益率", contextA: "売上高", contextB: "利益額", unit: "万円", verb: "収益率が高い" },
-  { theme: "読書達成率", contextA: "目標冊数", contextB: "読了冊数", unit: "冊", verb: "達成率が高い" },
+  { theme:"データ通信量", contextA:"月間データ量", contextB:"使用量", unit:"GB", verb:"使用量の割合が大きい" },
+  { theme:"テスト成績", contextA:"問題数", contextB:"正解数", unit:"問", verb:"正答率が高い" },
+  { theme:"欠勤率", contextA:"従業員数", contextB:"欠勤者数", unit:"人", verb:"欠勤率が高い" },
+  { theme:"観光客の宿泊率", contextA:"観光客数", contextB:"宿泊者数", unit:"人", verb:"宿泊率が高い" },
+  { theme:"リサイクル率", contextA:"ゴミ総量", contextB:"再生量", unit:"トン", verb:"リサイクル率が高い" },
+  { theme:"商品の売上率", contextA:"仕入れ数", contextB:"販売数", unit:"個", verb:"売上率が高い" },
+  { theme:"合格率", contextA:"受験者数", contextB:"合格者数", unit:"人", verb:"合格率が高い" },
+  { theme:"出席率", contextA:"クラス人数", contextB:"出席者数", unit:"人", verb:"出席率が高い" },
+  { theme:"節水率", contextA:"使用目標量", contextB:"節水量", unit:"L", verb:"節水率が高い" },
+  { theme:"利用率", contextA:"収容人数", contextB:"利用者数", unit:"席", verb:"利用率が高い" },
+  { theme:"投票率", contextA:"有権者数", contextB:"投票者数", unit:"人", verb:"投票率が高い" },
+  { theme:"不良品率", contextA:"生産数", contextB:"不良品数", unit:"個", verb:"不良品率が高い" },
+  { theme:"返品率", contextA:"販売数", contextB:"返品数", unit:"個", verb:"返品率が高い" },
+  { theme:"収益率", contextA:"売上高", contextB:"利益額", unit:"万円", verb:"収益率が高い" },
+  { theme:"読書達成率", contextA:"目標冊数", contextB:"読了冊数", unit:"冊", verb:"達成率が高い" },
 ];
 
+function selectQ(n) {
+  TOTAL = n;
+  document.querySelectorAll('.btn-grid-6 .sel-btn').forEach(b => b.classList.remove('selected'));
+  [...document.querySelectorAll('.btn-grid-6 .sel-btn')].find(b => b.textContent.trim().startsWith(n + '問'))?.classList.add('selected');
+  document.getElementById('info-q').textContent = n;
+}
+function selectCompare(n) {
+  COMPARE = n;
+  document.getElementById('cmp-2').classList.toggle('selected', n === 2);
+  document.getElementById('cmp-3').classList.toggle('selected', n === 3);
+  document.getElementById('info-cmp').textContent = n;
+}
 function selectPreset(val) {
-  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
-  const customRow = document.getElementById('custom-row');
+  document.querySelectorAll('.btn-grid-4 .sel-btn').forEach(b => b.classList.remove('selected'));
+  const cr = document.getElementById('custom-row');
   if (val === 'custom') {
     document.getElementById('preset-custom').classList.add('selected');
-    customRow.style.display = 'flex';
+    cr.style.display = 'flex';
     const sv = parseInt(document.getElementById('custom-slider').value);
-    TIME = sv;
-    document.getElementById('custom-preview').textContent = sv + '秒';
+    TIME = sv; document.getElementById('custom-preview').textContent = sv + '秒';
   } else {
-    customRow.style.display = 'none';
-    TIME = val;
+    cr.style.display = 'none'; TIME = val;
     document.getElementById('custom-preview').textContent = '—';
-    const map = {15: 0, 30: 1, 60: 2};
-    if (map[val] !== undefined) document.querySelectorAll('.preset-btn')[map[val]].classList.add('selected');
+    const map = { 15: 0, 30: 1, 60: 2 };
+    if (map[val] !== undefined) document.querySelectorAll('.btn-grid-4 .sel-btn')[map[val]].classList.add('selected');
   }
   document.getElementById('info-time').textContent = TIME;
 }
-
 function onSlider(v) {
   TIME = parseInt(v);
   document.getElementById('custom-val').textContent = v + '秒';
@@ -278,18 +344,22 @@ function addComma(n) { return Number(n).toLocaleString('ja-JP'); }
 
 function generateLocalQuestions() {
   const shuffled = [...TEMPLATES].sort(() => Math.random() - 0.5);
+  const labels = COMPARE === 2 ? ['A', 'B'] : ['A', 'B', 'C'];
   return shuffled.slice(0, TOTAL).map(t => {
-    const totalA = randInt(50, 800), totalB = randInt(60, 900);
-    const ratioA = Math.random() * 0.55 + 0.15;
-    const diff = (Math.random() < 0.5 ? 1 : -1) * (Math.random() * 0.12 + 0.05);
-    const ratioB = Math.max(0.1, Math.min(0.95, ratioA + diff));
-    const partA = Math.round(totalA * ratioA), partB = Math.round(totalB * ratioB);
+    const totals = labels.map(() => randInt(50, 800));
+    const base = Math.random() * 0.5 + 0.15;
+    const ratios = labels.map((_, i) => {
+      if (i === 0) return base;
+      const d = (Math.random() < 0.5 ? 1 : -1) * (Math.random() * 0.12 + 0.05);
+      return Math.max(0.1, Math.min(0.95, base + d));
+    });
+    const parts = totals.map((tot, i) => Math.round(tot * ratios[i]));
+    const correctIdx = ratios.indexOf(Math.max(...ratios));
     return {
-      theme: t.theme, contextA: t.contextA, contextB: t.contextB, unit: t.unit, verb: t.verb,
-      totalA, totalB, partA, partB,
-      rateA: (partA / totalA * 100).toFixed(1),
-      rateB: (partB / totalB * 100).toFixed(1),
-      correct: ratioA >= ratioB ? 'A' : 'B'
+      theme: t.theme, verb: t.verb, contextA: t.contextA, contextB: t.contextB, unit: t.unit,
+      question: 'どちらの' + t.verb + 'か？',
+      items: labels.map((lbl, i) => ({ label: lbl, labelName: lbl, total: totals[i], part: parts[i], rate: (parts[i] / totals[i] * 100).toFixed(1), desc: '' })),
+      correct: labels[correctIdx]
     };
   });
 }
@@ -297,36 +367,37 @@ function generateLocalQuestions() {
 async function startQuiz() {
   const btn = document.getElementById('start-btn');
   btn.disabled = true; btn.textContent = '問題を生成中…';
-  document.getElementById('start-err').innerHTML = '';
   try { questions = await fetchQuestionsFromClaude(); }
-  catch(e) { questions = generateLocalQuestions(); }
+  catch (e) { questions = generateLocalQuestions(); }
   current = 0; results = [];
-  showScreen('screen-quiz');
-  buildDots(); showQuestion();
+  showScreen('screen-quiz'); buildDots(); showQuestion();
   btn.disabled = false; btn.textContent = 'スタート';
 }
 
 async function fetchQuestionsFromClaude() {
-  const prompt = `割合の大小比較の練習問題を${TOTAL}問、日本語でJSON形式で生成してください。各問題は異なるテーマを使うこと。正答は必ず"A"か"B"のどちらか（同じ割合にしない）。AとBが均等に分布するようにすること。数値は現実的かつ計算しやすい値にすること。
-以下のJSON配列のみを返してください（説明文やコードブロック記号は不要）：
-[{"theme":"テーマ名","question":"問題文（どちらの○○が高いか）","labelA":"A側の名称","descA":"Aの説明（例：月間30GBの契約で17GB使用）","labelB":"B側の名称","descB":"Bの説明","totalA":数値,"partA":数値,"totalB":数値,"partB":数値,"unit":"単位","correct":"AまたはB","rateA":"小数点1桁の数値","rateB":"小数点1桁の数値"}]`;
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: prompt }] })
+  const labels = COMPARE === 2 ? ['A', 'B'] : ['A', 'B', 'C'];
+  const prompt = '割合の大小比較の練習問題を' + TOTAL + '問、日本語でJSON形式で生成してください。各問題は異なるテーマ。比較対象は' + COMPARE + 'つ（' + labels.join('と') + '）。正答は割合が最も大きいもの。各選択肢が均等に正答になるよう分布。数値は現実的かつ計算しやすい値。\nJSON配列のみ返却（コードブロック記号不要）：\n[{"theme":"テーマ","question":"問題文",' + labels.map(l => '"label' + l + '":"' + l + '側の名称","desc' + l + '":"' + l + 'の説明","total' + l + '":数値,"part' + l + '":数値,"rate' + l + '":"小数点1桁"').join(',') + ',"unit":"単位","correct":"' + labels.join(' or ') + '"}]';
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1500, messages: [{ role: 'user', content: prompt }] })
   });
-  if (!res.ok) throw new Error('API error: ' + res.status);
+  if (!res.ok) throw new Error('API error');
   const data = await res.json();
   const text = data.content.map(i => i.text || '').join('');
-  const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
-  if (!Array.isArray(parsed) || parsed.length < TOTAL) throw new Error('invalid response');
-  return parsed.slice(0, TOTAL);
+  const raw = JSON.parse(text.replace(/```json|```/g, '').trim());
+  if (!Array.isArray(raw) || raw.length < TOTAL) throw new Error('invalid');
+  const lbls = COMPARE === 2 ? ['A', 'B'] : ['A', 'B', 'C'];
+  return raw.slice(0, TOTAL).map(q => ({
+    theme: q.theme, question: q.question, unit: q.unit, correct: q.correct,
+    items: lbls.map(l => ({ label: l, labelName: q['label' + l] || l, total: q['total' + l] || 100, part: q['part' + l] || 50, rate: q['rate' + l] || '50.0', desc: q['desc' + l] || '' }))
+  }));
 }
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
 }
-
 function buildDots() {
   const el = document.getElementById('dots'); el.innerHTML = '';
   for (let i = 0; i < TOTAL; i++) {
@@ -334,7 +405,6 @@ function buildDots() {
     d.className = 'dot' + (i === 0 ? ' active' : ''); d.id = 'dot-' + i; el.appendChild(d);
   }
 }
-
 function updateDot(idx, state) {
   const d = document.getElementById('dot-' + idx); if (d) d.className = 'dot done-' + state;
   const n = document.getElementById('dot-' + (idx + 1)); if (n) n.className = 'dot active';
@@ -347,40 +417,29 @@ function showQuestion() {
   document.getElementById('feedback-area').innerHTML = '';
   document.getElementById('skip-btn').style.display = '';
   const q = questions[current];
-  const card = document.getElementById('q-card');
-  if (q.question) {
-    card.innerHTML = `<div class="q-text">
-      <div class="q-theme">${q.theme}</div>
-      <div class="q-question">${q.question}</div>
-      <div class="data-row a-row"><span class="entity">${q.labelA || 'A'}</span><span class="desc">${q.descA}</span></div>
-      <div class="data-row b-row"><span class="entity">${q.labelB || 'B'}</span><span class="desc">${q.descB}</span></div>
-    </div>`;
-  } else {
-    card.innerHTML = `<div class="q-text">
-      <div class="q-theme">${q.theme}</div>
-      <div class="q-question">どちらの${q.verb || '割合が大きい'}か？</div>
-      <div class="data-row a-row"><span class="entity">A</span><span class="desc">${q.contextA}：${addComma(q.totalA)}${q.unit}　${q.contextB}：${addComma(q.partA)}${q.unit}</span></div>
-      <div class="data-row b-row"><span class="entity">B</span><span class="desc">${q.contextA}：${addComma(q.totalB)}${q.unit}　${q.contextB}：${addComma(q.partB)}${q.unit}</span></div>
-    </div>`;
-  }
-  document.getElementById('choices').innerHTML = `
-    <button class="choice-btn" id="btn-A" onclick="answer('A')">Aの方が大きい</button>
-    <button class="choice-btn" id="btn-B" onclick="answer('B')">Bの方が大きい</button>`;
+  const rowCls = ['a-row', 'b-row', 'c-row'];
+  const rows = q.items.map((item, i) => {
+    const lbl = item.labelName || item.label;
+    const desc = item.desc || ((q.contextA || '合計') + '：' + addComma(item.total) + (q.unit || '') + '　' + (q.contextB || '対象') + '：' + addComma(item.part) + (q.unit || ''));
+    return '<div class="data-row ' + rowCls[i] + '"><span class="entity">' + lbl + '</span><span class="desc">' + desc + '</span></div>';
+  }).join('');
+  document.getElementById('q-card').innerHTML = '<div class="q-text"><div class="q-theme">' + q.theme + '</div><div class="q-question">' + (q.question || 'どちらの割合が最も大きいか？') + '</div>' + rows + '</div>';
+  const choicesEl = document.getElementById('choices');
+  choicesEl.className = 'choices ' + (q.items.length === 3 ? 'three' : 'two');
+  const lbl2 = { A: 'Aの方が大きい', B: 'Bの方が大きい' };
+  const lbl3 = { A: 'Aが最も大きい', B: 'Bが最も大きい', C: 'Cが最も大きい' };
+  const lblMap = q.items.length === 2 ? lbl2 : lbl3;
+  choicesEl.innerHTML = q.items.map(item => '<button class="choice-btn" id="btn-' + item.label + '" onclick="answer(\'' + item.label + '\')">' + (lblMap[item.label] || item.label) + '</button>').join('');
   startTimer();
 }
 
 function startTimer() {
   clearInterval(timerInterval); timeLeft = TIME; updateTimerUI();
-  timerInterval = setInterval(() => {
-    timeLeft--; updateTimerUI();
-    if (timeLeft <= 0) { clearInterval(timerInterval); if (!answered) skipQuestion(); }
-  }, 1000);
+  timerInterval = setInterval(() => { timeLeft--; updateTimerUI(); if (timeLeft <= 0) { clearInterval(timerInterval); if (!answered) skipQuestion(); } }, 1000);
 }
-
 function updateTimerUI() {
-  const pct = (timeLeft / TIME * 100).toFixed(1);
   const bar = document.getElementById('timer-bar');
-  bar.style.width = pct + '%';
+  bar.style.width = (timeLeft / TIME * 100).toFixed(1) + '%';
   bar.className = 'timer-bar' + (timeLeft <= Math.max(8, Math.round(TIME * 0.25)) ? ' warn' : '');
   document.getElementById('timer-num').textContent = timeLeft;
 }
@@ -389,19 +448,13 @@ function answer(choice) {
   if (answered) return;
   answered = true; clearInterval(timerInterval);
   const q = questions[current], correct = q.correct, isCorrect = choice === correct;
-  results.push({ correct: isCorrect, skipped: false });
-  const btnA = document.getElementById('btn-A'), btnB = document.getElementById('btn-B');
-  [btnA, btnB].forEach(b => b.disabled = true);
-  if (correct === 'A') { btnA.classList.add('correct'); if (choice === 'B') btnB.classList.add('wrong'); }
-  else { btnB.classList.add('correct'); if (choice === 'A') btnA.classList.add('wrong'); }
-  const rA = parseFloat(q.rateA).toFixed(1), rB = parseFloat(q.rateB).toFixed(1);
+  results.push({ correct: isCorrect, skipped: false, choice, q });
+  q.items.forEach(item => { const b = document.getElementById('btn-' + item.label); if (!b) return; b.disabled = true; if (item.label === correct) b.classList.add('correct'); else if (item.label === choice) b.classList.add('wrong'); });
+  const rateText = q.items.map(item => (item.labelName || item.label) + '：' + parseFloat(item.rate).toFixed(1) + '%').join('　');
   const fb = document.getElementById('feedback-area');
-  if (isCorrect) {
-    fb.innerHTML = `<div class="feedback correct">✓ 正解！（A：${rA}%　B：${rB}%）</div>`;
-  } else {
-    const ans = correct === 'A' ? 'Aの方が大きい' : 'Bの方が大きい';
-    fb.innerHTML = `<div class="feedback wrong">✗ 不正解。正解は「${ans}」（A：${rA}%　B：${rB}%）</div>`;
-  }
+  fb.innerHTML = isCorrect
+    ? '<div class="feedback correct">&#10003; 正解！（' + rateText + '）</div>'
+    : '<div class="feedback wrong">&#10007; 不正解。正解は「' + correct + '」（' + rateText + '）</div>';
   updateDot(current, isCorrect ? 'correct' : 'wrong');
   document.getElementById('skip-btn').style.display = 'none';
   setTimeout(() => { current++; showQuestion(); }, 1800);
@@ -411,11 +464,10 @@ function skipQuestion() {
   if (answered) return;
   answered = true; clearInterval(timerInterval);
   const q = questions[current];
-  results.push({ correct: false, skipped: true });
-  [document.getElementById('btn-A'), document.getElementById('btn-B')].forEach(b => { if (b) b.disabled = true; });
-  const ans = q.correct === 'A' ? 'Aの方が大きい' : 'Bの方が大きい';
-  const rA = parseFloat(q.rateA).toFixed(1), rB = parseFloat(q.rateB).toFixed(1);
-  document.getElementById('feedback-area').innerHTML = `<div class="feedback skip">時間切れ。正解は「${ans}」（A：${rA}%　B：${rB}%）</div>`;
+  results.push({ correct: false, skipped: true, choice: null, q });
+  q.items.forEach(item => { const b = document.getElementById('btn-' + item.label); if (b) b.disabled = true; });
+  const rateText = q.items.map(item => (item.labelName || item.label) + '：' + parseFloat(item.rate).toFixed(1) + '%').join('　');
+  document.getElementById('feedback-area').innerHTML = '<div class="feedback skip">時間切れ。正解は「' + q.correct + '」（' + rateText + '）</div>';
   updateDot(current, 'skip');
   document.getElementById('skip-btn').style.display = 'none';
   setTimeout(() => { current++; showQuestion(); }, 1800);
@@ -428,20 +480,44 @@ function showResult() {
   const wrong = results.filter(r => !r.correct && !r.skipped).length;
   const pct = Math.round(correct / TOTAL * 100);
   document.getElementById('score-pct').textContent = pct + '%';
-  document.getElementById('score-sub').textContent =
-    pct === 100 ? '全問正解！素晴らしい！' :
-    pct >= 80 ? 'よくできました！' :
-    pct >= 60 ? 'もう少し練習しよう！' : '基礎から復習しよう！';
-  document.getElementById('score-meta').textContent = `制限時間：${TIME}秒 / 問`;
+  document.getElementById('score-sub').textContent = pct === 100 ? '全問正解！素晴らしい！' : pct >= 80 ? 'よくできました！' : pct >= 60 ? 'もう少し練習しよう！' : '基礎から復習しよう！';
+  document.getElementById('score-meta').textContent = TOTAL + '問　比較数：' + COMPARE + 'つ　制限時間：' + TIME + '秒 / 問';
   document.getElementById('r-correct').textContent = correct;
   document.getElementById('r-wrong').textContent = wrong;
   document.getElementById('r-skip').textContent = skipped;
 }
 
-function retryQuiz() {
-  current = 0; results = []; questions = [];
-  showScreen('screen-start');
+function showReview() {
+  showScreen('screen-review');
+  const rowCls = ['a-row', 'b-row', 'c-row'];
+  const lbl2 = { A: 'Aの方が大きい', B: 'Bの方が大きい' };
+  const lbl3 = { A: 'Aが最も大きい', B: 'Bが最も大きい', C: 'Cが最も大きい' };
+  document.getElementById('review-list').innerHTML = results.map((r, i) => {
+    const q = r.q;
+    const badgeCls = r.correct ? 'badge-correct' : r.skipped ? 'badge-skip' : 'badge-wrong';
+    const badgeTxt = r.correct ? '正解' : r.skipped ? '時間切れ' : '不正解';
+    const lblMap = q.items.length === 2 ? lbl2 : lbl3;
+    const rows = q.items.map((item, j) => {
+      const lbl = item.labelName || item.label;
+      const desc = item.desc || ((q.contextA || '合計') + '：' + addComma(item.total) + (q.unit || '') + '　' + (q.contextB || '対象') + '：' + addComma(item.part) + (q.unit || ''));
+      return '<div class="data-row ' + rowCls[j] + '" style="margin-bottom:5px"><span class="entity">' + lbl + '</span><span class="desc">' + desc + '</span></div>';
+    }).join('');
+    const correctItem = q.items.find(item => item.label === q.correct);
+    const correctLbl = correctItem ? (correctItem.labelName || correctItem.label) : q.correct;
+    const choiceTxt = r.choice ? (lblMap[r.choice] || r.choice) : '（未回答）';
+    const rateText = q.items.map(item => (item.labelName || item.label) + '：' + parseFloat(item.rate).toFixed(1) + '%').join('　');
+    const myChoiceHtml = (!r.correct && !r.skipped) ? '<span class="review-mychoice">あなたの回答：' + choiceTxt + '</span>' : '';
+    return '<div class="review-item">'
+      + '<div class="review-header"><span class="review-num">第' + (i + 1) + '問</span><span class="review-badge ' + badgeCls + '">' + badgeTxt + '</span>' + myChoiceHtml + '</div>'
+      + '<div class="review-question">' + (q.question || 'どちらの割合が最も大きいか？') + '</div>'
+      + '<div class="review-data">' + rows + '</div>'
+      + '<div class="review-answer ' + (r.correct ? 'correct' : 'neutral') + '">&#9654; 正解：' + correctLbl + '（' + (lblMap[q.correct] || q.correct) + '）</div>'
+      + '<div class="review-explanation">&#128161; 正解は「' + correctLbl + '」です。各割合は ' + rateText + ' となり、' + correctLbl + 'の割合が最も大きくなります。</div>'
+      + '</div>';
+  }).join('');
 }
+
+function retryQuiz() { current = 0; results = []; questions = []; showScreen('screen-start'); }
 </script>
 </body>
 </html>
